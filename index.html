@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Érica Cílios & Cursos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-bg: #edd6d0;
+            --secondary-bg: #f5e8e4;
+            --text-color: #3b2e2a;
+        }
+
+html {
+  scroll-behavior: smooth;
+}
+      
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(237, 214, 208, 0.8), rgba(237, 214, 208, 0.9));
+        }
+        
+        .about-section {
+            background-color: var(--secondary-bg);
+        }
+        
+        .services-section {
+            background-color: var(--primary-bg);
+        }
+        
+        .courses-section {
+            background-color: var(--secondary-bg);
+        }
+        
+        .profile-image {
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-card {
+            transition: all 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--text-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2a211e;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-color);
+            border: 2px solid var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--text-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--text-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .service-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .service-toggle:checked ~ .service-content {
+            max-height: 1000px;
+        }
+        
+        .service-toggle:checked ~ .service-header .plus-icon::after {
+            transform: rotate(90deg);
+        }
+        
+        .plus-icon {
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .plus-icon::before, .plus-icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .plus-icon::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        
+        .plus-icon::after {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#edd6d0]">
+    <!-- Header/Navigation -->
+    <header id="mainHeader" class="fixed w-full z-50 bg-white/90 shadow-sm transition-transform duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#home" class="flex items-center">
+                <img src="https://i.imgur.com/XbxwoEP.png" alt="Érica Cílios & Cursos Logo" class="h-16 md:h-20">
+            </a>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#home" class="nav-link font-medium">Home</a></li>
+                    <li><a href="#about" class="nav-link font-medium">Sobre</a></li>
+                    <li><a href="#services" class="nav-link font-medium">Serviços</a></li>
+                    <li><a href="#courses" class="nav-link font-medium">Cursos</a></li>
+                    <li><a href="#contact" class="nav-link font-medium">Contato</a></li>
+                </ul>
+            </nav>
+            <!-- Botão do menu -->
+<button id="menuToggle" 
+  class="md:hidden text-2xl">☰</button>
+        </div>
+    </header>
+  <!-- Menu Mobile flutuante e discreto -->
+<div id="mobileMenu"
+     class="md:hidden hidden fixed flex flex-col space-y-2 bg-white shadow-lg rounded-lg top-16 right-4 z-50 px-4 py-3 w-auto">
+    <a href="#home" class="nav-link font-medium whitespace-nowrap">Home</a>
+    <a href="#about" class="nav-link font-medium whitespace-nowrap">Sobre</a>
+    <a href="#services" class="nav-link font-medium whitespace-nowrap">Serviços</a>
+    <a href="#courses" class="nav-link font-medium whitespace-nowrap">Cursos</a>
+    <a href="#contact" class="nav-link font-medium whitespace-nowrap">Contato</a>
+</div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto px-4 py-20 text-center">
+            <h1 class="hero-title title-font text-4xl md:text-5xl lg:text-6xl font-bold mb-4">ÉRICA CÍLIOS & CURSOS</h1>
+            <p class="text-xl md:text-2xl mb-8">Transformando olhares com naturalidade</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#services" class="btn-primary py-3 px-8 rounded-full font-medium inline-block">Agende seu horário</a>
+                <a href="#courses" class="btn-secondary py-3 px-8 rounded-full font-medium inline-block">Conheça os Cursos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title title-font text-3xl md:text-4xl text-center mb-16">Sobre a Érica</h2>
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="md:w-1/3 flex justify-center">
+                    <img src="https://i.imgur.com/7H4pAR7.jpeg" alt="Érica" class="profile-image w-64 h-64 md:w-80 md:h-80 object-cover">
+                </div>
+                <div class="md:w-2/3">
+                    <p class="mb-4">Antes de começar nessa jornada, deixa eu te contar um pouquinho da minha história. Tenho 29 anos, sou casada e mãe. Há exatamente 4 anos comecei na área de extensão de cílios, e desde então faço diversos cursos pra aprimorar e aperfeiçoar não só minha técnica, como também desenvolver meu negócio. O que mais me chamou a atenção nessa área, foi como ela transforma não só o olhar, mas a vida das mulheres, levando auto estima e empoderamento.</p>
+                    <p class="mb-4">Desde que me tornei uma Lash Artist minha vida se transformou muito, financeiramente, profissionalmente, e pessoalmente. Conquistei alguns sonhos que pareciam impossíveis, viajei para lugares incríveis, e vivo uma vida muito confortável. Hoje além de oferecer a técnica, ensino outras pessoas a fazerem o mesmo que eu, alcançarem seus sonhos e terem uma carreira de sucesso.</p>
+                    <p>E hoje estamos aqui pra te ajudar a iniciar sua vida dos sonhos. Conte comigo!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title title-font text-3xl md:text-4xl text-center mb-16">Técnicas</h2>
+            
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Volume Express -->
+                <div class="service-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <input type="checkbox" id="service1" class="service-toggle hidden">
+                    <label for="service1" class="service-header cursor-pointer flex justify-between items-center p-6">
+                        <h3 class="text-xl font-medium">Volume Express</h3>
+                        <span class="plus-icon"></span>
+                    </label>
+                    <div class="service-content">
+                        <div class="px-6 pb-6">
+                            <img src="https://i.imgur.com/lWuJl5R.jpeg" alt="Volume Express" class="w-full h-64 object-cover rounded mb-4">
+                            <p class="text-gray-700">Técnica que proporciona um volume natural com tempo reduzido de aplicação, perfeito para quem busca um resultado bonito com praticidade.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Volume Brasileiro -->
+                <div class="service-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <input type="checkbox" id="service2" class="service-toggle hidden">
+                    <label for="service2" class="service-header cursor-pointer flex justify-between items-center p-6">
+                        <h3 class="text-xl font-medium">Volume Brasileiro</h3>
+                        <span class="plus-icon"></span>
+                    </label>
+                    <div class="service-content">
+                        <div class="px-6 pb-6">
+                            <img src="https://i.imgur.com/yQCJB9D.jpeg" alt="Volume Brasileiro" class="w-full h-64 object-cover rounded mb-4">
+                            <p class="text-gray-700">Técnica que cria um efeito de volume intenso e dramático, com fios mais longos nas pontas para um olhar marcante e sensual.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Efeito Rímel -->
+                <div class="service-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <input type="checkbox" id="service3" class="service-toggle hidden">
+                    <label for="service3" class="service-header cursor-pointer flex justify-between items-center p-6">
+                        <h3 class="text-xl font-medium">Efeito Rímel</h3>
+                        <span class="plus-icon"></span>
+                    </label>
+                    <div class="service-content">
+                        <div class="px-6 pb-6">
+                            <img src="https://i.imgur.com/ZFtCvwf.jpeg" alt="Efeito Rímel" class="w-full h-64 object-cover rounded mb-4">
+                            <p class="text-gray-700">Técnica que imita o efeito do rímel, com fios agrupados para um olhar mais definido e marcante, sem perder a naturalidade.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Volume Europeu -->
+                <div class="service-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <input type="checkbox" id="service4" class="service-toggle hidden">
+                    <label for="service4" class="service-header cursor-pointer flex justify-between items-center p-6">
+                        <h3 class="text-xl font-medium">Volume Europeu</h3>
+                        <span class="plus-icon"></span>
+                    </label>
+                    <div class="service-content">
+                        <div class="px-6 pb-6">
+                            <img src="https://i.imgur.com/AjASTzR.jpeg" alt="Volume Europeu" class="w-full h-64 object-cover rounded mb-4">
+                            <p class="text-gray-700">Técnica que proporciona um volume sofisticado e elegante, com fios mais uniformes para um olhar natural e refinado.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Volume Inglês -->
+                <div class="service-card bg-white rounded-lg overflow-hidden shadow-md">
+                    <input type="checkbox" id="service5" class="service-toggle hidden">
+                    <label for="service5" class="service-header cursor-pointer flex justify-between items-center p-6">
+                        <h3 class="text-xl font-medium">Volume Inglês</h3>
+                        <span class="plus-icon"></span>
+                    </label>
+                    <div class="service-content">
+                        <div class="px-6 pb-6">
+                            <img src="https://i.imgur.com/PPyR8te.jpeg" alt="Volume Inglês" class="w-full h-64 object-cover rounded mb-4">
+                            <p class="text-gray-700">Técnica que cria um efeito de volume em camadas, proporcionando um olhar profundo e misterioso, com fios em diferentes comprimentos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                 <a href="https://wa.me/5588988625203"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn-primary py-3 px-8 rounded-full font-medium inline-block">
+       Agendar Horário 
+    </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="courses-section py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title title-font text-3xl md:text-4xl text-center mb-16">Cursos</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Curso Iniciante -->
+                <div class="course-card bg-white rounded-lg overflow-hidden shadow-md p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Curso Iniciante</h3>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Atendimento personalizado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Dicas e segredos da técnica</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Como evitar erros comuns</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Preparação dos cílios pré-procedimento</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Manutenção</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Biossegurança</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Ficha de Anamnese</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Mappeamento personalizado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Remoção</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Treinamentos na boneca</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Treinamento em modelos</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Fio a Fio</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Volume brasileiro</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Volume egípcio</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>BONUS: Capping Retenção 30+</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                         <a href="https://wa.me/5588988625203"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn-primary py-3 px-8 rounded-full font-medium inline-block">
+       Inscrever-se 
+    </a>
+                    </div>
+                </div>
+                
+                <!-- Curso Avançado -->
+                <div class="course-card bg-white rounded-lg overflow-hidden shadow-md p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Curso Avançado</h3>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Atendimento personalizado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Dicas e segredos da técnica</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Como evitar erros comuns</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Preparação dos cílios pré-procedimento</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Manutenção</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Biossegurança</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Ficha de Anamnese</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Bio Segurança</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Mappeamento personalizado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Minimizar tempo de procedimento</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Treinamento em modelos</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Retenção 30+</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Fox Eyes</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Efeito Delineado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>Teorica cílios inferiores</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span>BONUS: Capping</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="https://wa.me/5588988625203"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn-primary py-3 px-8 rounded-full font-medium inline-block">
+       Inscrever-se 
+    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-black text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <img src="https://i.imgur.com/XbxwoEP.png" alt="Érica Cílios & Cursos Logo" class="h-16">
+                </div>
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-4">Contato</h3>
+                    <div class="space-y-2">
+                        <p class="flex items-center justify-center md:justify-start">
+                            <span class="mr-2">📱</span>
+                            WhatsApp: (88) 98862-5203
+                        </p>
+                        <p class="flex items-center justify-center md:justify-start">
+                            <span class="mr-2">📸</span>
+                            Instagram: @ericastudiolash
+                        </p>
+                        <p class="flex items-center justify-center md:justify-start">
+                            <span class="mr-2">📍</span>
+                            Rua Menino Jesus de Praga, 83 - Novo Juazeiro, Juazeiro do Norte
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p>© 2025 Érica Cílios & Cursos. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+<script>
+    // Script do menu mobile
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const links = menu.querySelectorAll('a');
+
+    toggle.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+    });
+
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.add('hidden');
+        });
+    });
+</script>
+
+<script>
+    // Script para esconder o cabeçalho ao rolar
+    const header = document.getElementById("mainHeader");
+    let lastScroll = 0;
+
+    window.addEventListener("scroll", () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > lastScroll) {
+            header.style.transform = "translateY(-100%)";
+        } else {
+            header.style.transform = "translateY(0)";
+        }
+
+        lastScroll = currentScroll;
+    });
+</script>
+</body>
+</html>
