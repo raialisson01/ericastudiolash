@@ -51,9 +51,9 @@
 <a href="#calendario" class="text-xl font-semibold mb-6 block text-center text-pink-700 hover:underline">Visualizar Calendário</a>
 
 <!-- Calendário -->
-<div class="bg-white p-6 rounded-lg shadow-md" id="calendarioContainer">
+<div class="bg-white p-6 rounded-lg shadow-md" id="calendario">
   <h2 class="text-xl font-semibold mb-4">Visualização em Calendário</h2>
-  <div id='calendario'></div>
+  <div id='calendarioInterno'></div>
 </div>
 
   </div>  <script>
@@ -113,6 +113,11 @@
       agendaContainer.innerHTML = '';
       const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
 
+      if (agendamentos.length === 0) {
+        agendaContainer.innerHTML = '<p class="text-center text-gray-500">Nenhum agendamento encontrado.</p>';
+        return;
+      }
+
       const porData = {};
       agendamentos.forEach(a => {
         if (!porData[a.data]) porData[a.data] = [];
@@ -162,7 +167,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendario');
+      const calendarEl = document.getElementById('calendarioInterno');
       calendario = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
