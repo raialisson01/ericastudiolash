@@ -18,7 +18,7 @@
 <form id="agendamentoForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 mb-8">
   <div class="grid md:grid-cols-2 gap-4">
     <input type="text" id="nome" placeholder="Nome" required class="border p-2 rounded w-full">
-    <input type="tel" id="telefone" placeholder="DDD+Telefone" class="border p-2 rounded w-full">
+    <input type="tel" id="telefone" placeholder="(88) 98862-5203" class="border p-2 rounded w-full">
     <input type="text" id="endereco" placeholder="Endereço (Rua e Número)" class="border p-2 rounded w-full">
     <input type="text" id="bairro" placeholder="Bairro" class="border p-2 rounded w-full">
     <input type="text" id="cidade" placeholder="Cidade" class="border p-2 rounded w-full">
@@ -138,8 +138,17 @@
     function atualizarCalendario() {
       const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
       const eventos = agendamentos.map(a => ({
+        id: a.id,
         title: `${a.nome} - ${a.procedimento}`,
         start: `${a.data}T${a.hora}`,
+        extendedProps: {
+          telefone: a.telefone,
+          instagram: a.instagram,
+          endereco: a.endereco,
+          bairro: a.bairro,
+          cidade: a.cidade,
+          anotacoes: a.anotacoes
+        },
         allDay: false
       }));
 
@@ -154,7 +163,18 @@
       calendario = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
-        events: []
+        events: [],
+        eventClick: function(info) {
+          const props = info.event.extendedProps;
+          alert(
+            `Cliente: ${info.event.title}\n` +
+            `Telefone: ${props.telefone}\n` +
+            `Instagram: ${props.instagram}\n` +
+            `Endereço: ${props.endereco}, ${props.bairro}, ${props.cidade}\n` +
+            `Anotações: ${props.anotacoes || 'Nenhuma'}\n` +
+            `Data: ${info.event.start.toLocaleDateString()} - ${info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
+          );
+        }
       });
       calendario.render();
 
