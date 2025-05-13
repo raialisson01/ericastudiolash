@@ -4,53 +4,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestão de Clientes - Lash Designer</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js'></script>
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
     }
+    input:invalid {
+      border-color: red;
+    }
   </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-10 px-4">
-  <div class="max-w-3xl mx-auto">
+  <div class="max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold text-center mb-6">Gestão de Clientes</h1><!-- Formulário -->
 <form id="agendamentoForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 mb-8">
   <div class="grid md:grid-cols-2 gap-4">
     <input type="text" id="nome" placeholder="Nome" required class="border p-2 rounded w-full">
-    <input type="text" id="telefone" placeholder="Telefone" required class="border p-2 rounded w-full">
-    <input type="text" id="endereco" placeholder="Endereço" class="border p-2 rounded w-full">
+    <input type="tel" id="telefone" placeholder="(88) 99999-9999" pattern="\d{2} \d{5}-\d{4}" required class="border p-2 rounded w-full">
+    <input type="text" id="endereco" placeholder="Endereço (Rua e Número)" class="border p-2 rounded w-full">
+    <input type="text" id="bairro" placeholder="Bairro" class="border p-2 rounded w-full">
+    <input type="text" id="cidade" placeholder="Cidade" class="border p-2 rounded w-full">
     <input type="text" id="instagram" placeholder="@Instagram" class="border p-2 rounded w-full">
-    <input type="date" id="data" required class="border p-2 rounded w-full">
-    <input type="time" id="hora" required class="border p-2 rounded w-full">
+    <label class="block">
+      <span class="text-sm text-gray-700">Data</span>
+      <input type="date" id="data" required class="border p-2 rounded w-full">
+    </label>
+    <label class="block">
+      <span class="text-sm text-gray-700">Horário</span>
+      <input type="time" id="hora" required class="border p-2 rounded w-full">
+    </label>
   </div>
   <select id="procedimento" required class="border p-2 rounded w-full">
     <option value="">Tipo de Procedimento</option>
     <option value="Aplicação">Aplicação</option>
     <option value="Manutenção">Manutenção</option>
   </select>
+  <textarea id="anotacoes" placeholder="Anotações" class="border p-2 rounded w-full"></textarea>
   <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Salvar Agendamento</button>
 </form>
 
 <!-- Lista de Agendamentos -->
-<div>
+<div class="mb-10">
   <h2 class="text-xl font-semibold mb-4">Agenda</h2>
   <div id="agendaContainer" class="space-y-4"></div>
+</div>
+
+<!-- Calendário -->
+<div class="bg-white p-6 rounded-lg shadow-md">
+  <h2 class="text-xl font-semibold mb-4">Visualização em Calendário</h2>
+  <div id='calendario'></div>
 </div>
 
   </div>  <script>
     const form = document.getElementById('agendamentoForm');
     const agendaContainer = document.getElementById('agendaContainer');
+    let calendario;
 
     function salvarAgendamento(event) {
       event.preventDefault();
 
       const agendamento = {
+        id: Date.now(),
         nome: form.nome.value,
         telefone: form.telefone.value,
         endereco: form.endereco.value,
+        bairro: form.bairro.value,
+        cidade: form.cidade.value,
         instagram: form.instagram.value,
         data: form.data.value,
         hora: form.hora.value,
-        procedimento: form.procedimento.value
+        procedimento: form.procedimento.value,
+        anotacoes: form.anotacoes.value
       };
 
       const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
@@ -59,13 +84,21 @@
 
       form.reset();
       renderizarAgendamentos();
+      atualizarCalendario();
+    }
+
+    function excluirAgendamento(id) {
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+      const novos = agendamentos.filter(a => a.id !== id);
+      localStorage.setItem('agendamentos', JSON.stringify(novos));
+      renderizarAgendamentos();
+      atualizarCalendario();
     }
 
     function renderizarAgendamentos() {
       agendaContainer.innerHTML = '';
       const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
 
-      // Agrupar por data
       const porData = {};
       agendamentos.forEach(a => {
         if (!porData[a.data]) porData[a.data] = [];
@@ -75,13 +108,15 @@
       Object.keys(porData).sort().forEach(data => {
         const section = document.createElement('div');
         section.classList.add('bg-white', 'p-4', 'rounded', 'shadow');
-        section.innerHTML = `<h3 class="font-bold text-lg mb-2">${data}</h3>`;
+        section.innerHTML = `<h3 class="font-bold text-lg mb-2">${new Date(data).toLocaleDateString()}</h3>`;
         porData[data].forEach(a => {
           section.innerHTML += `
             <div class="border-t pt-2 mt-2">
               <p><strong>${a.hora}</strong> - ${a.nome} (${a.procedimento})</p>
               <p>Fone: ${a.telefone} | Insta: ${a.instagram}</p>
-              <p>Endereço: ${a.endereco}</p>
+              <p>Endereço: ${a.endereco}, ${a.bairro}, ${a.cidade}</p>
+              <p>Anotações: ${a.anotacoes || '-'}</p>
+              <button onclick="excluirAgendamento(${a.id})" class="mt-2 text-sm text-red-600 hover:underline">Excluir</button>
             </div>
           `;
         });
@@ -89,7 +124,33 @@
       });
     }
 
+    function atualizarCalendario() {
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+      const eventos = agendamentos.map(a => ({
+        title: `${a.nome} - ${a.procedimento}`,
+        start: `${a.data}T${a.hora}`,
+        allDay: false
+      }));
+
+      if (calendario) {
+        calendario.removeAllEvents();
+        eventos.forEach(e => calendario.addEvent(e));
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendario');
+      calendario = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        events: []
+      });
+      calendario.render();
+
+      renderizarAgendamentos();
+      atualizarCalendario();
+    });
+
     form.addEventListener('submit', salvarAgendamento);
-    window.addEventListener('DOMContentLoaded', renderizarAgendamentos);
   </script></body>
 </html>
