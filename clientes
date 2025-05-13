@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Clientes - Lash Designer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-pink-50 min-h-screen py-10 px-4">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-6">Gestão de Clientes</h1><!-- Formulário -->
+<form id="agendamentoForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 mb-8">
+  <div class="grid md:grid-cols-2 gap-4">
+    <input type="text" id="nome" placeholder="Nome" required class="border p-2 rounded w-full">
+    <input type="text" id="telefone" placeholder="Telefone" required class="border p-2 rounded w-full">
+    <input type="text" id="endereco" placeholder="Endereço" class="border p-2 rounded w-full">
+    <input type="text" id="instagram" placeholder="@Instagram" class="border p-2 rounded w-full">
+    <input type="date" id="data" required class="border p-2 rounded w-full">
+    <input type="time" id="hora" required class="border p-2 rounded w-full">
+  </div>
+  <select id="procedimento" required class="border p-2 rounded w-full">
+    <option value="">Tipo de Procedimento</option>
+    <option value="Aplicação">Aplicação</option>
+    <option value="Manutenção">Manutenção</option>
+  </select>
+  <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Salvar Agendamento</button>
+</form>
+
+<!-- Lista de Agendamentos -->
+<div>
+  <h2 class="text-xl font-semibold mb-4">Agenda</h2>
+  <div id="agendaContainer" class="space-y-4"></div>
+</div>
+
+  </div>  <script>
+    const form = document.getElementById('agendamentoForm');
+    const agendaContainer = document.getElementById('agendaContainer');
+
+    function salvarAgendamento(event) {
+      event.preventDefault();
+
+      const agendamento = {
+        nome: form.nome.value,
+        telefone: form.telefone.value,
+        endereco: form.endereco.value,
+        instagram: form.instagram.value,
+        data: form.data.value,
+        hora: form.hora.value,
+        procedimento: form.procedimento.value
+      };
+
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+      agendamentos.push(agendamento);
+      localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+
+      form.reset();
+      renderizarAgendamentos();
+    }
+
+    function renderizarAgendamentos() {
+      agendaContainer.innerHTML = '';
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+
+      // Agrupar por data
+      const porData = {};
+      agendamentos.forEach(a => {
+        if (!porData[a.data]) porData[a.data] = [];
+        porData[a.data].push(a);
+      });
+
+      Object.keys(porData).sort().forEach(data => {
+        const section = document.createElement('div');
+        section.classList.add('bg-white', 'p-4', 'rounded', 'shadow');
+        section.innerHTML = `<h3 class="font-bold text-lg mb-2">${data}</h3>`;
+        porData[data].forEach(a => {
+          section.innerHTML += `
+            <div class="border-t pt-2 mt-2">
+              <p><strong>${a.hora}</strong> - ${a.nome} (${a.procedimento})</p>
+              <p>Fone: ${a.telefone} | Insta: ${a.instagram}</p>
+              <p>Endereço: ${a.endereco}</p>
+            </div>
+          `;
+        });
+        agendaContainer.appendChild(section);
+      });
+    }
+
+    form.addEventListener('submit', salvarAgendamento);
+    window.addEventListener('DOMContentLoaded', renderizarAgendamentos);
+  </script></body>
+</html>
